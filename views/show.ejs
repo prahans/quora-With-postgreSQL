@@ -1,18 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>see in details</title>
-    <link rel="stylesheet" href="/style.css" />
-  </head>
+<%- include("includes/head.ejs");  %>
   <body>
     <h1>see your post in detail</h1>
     <p>Post id : <%= post.post_id %></p>
     <hr />
     <div class="post">
-      <h3 class="username"><%= post.username %></h3>
-      <h4 class="content"><%= post.content %></h4>
+      <h5 class="username">@<%= post.username %></h5>
+      <p class="content"><%= post.content %></p>
     </div>
   </body>
 </html>

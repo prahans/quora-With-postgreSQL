@@ -33,7 +33,6 @@ app.get("/posts/new", (req, res) => {
 app.post("/posts", async (req, res) => {
   try {
     let { username, content } = req.body;
-    console.log(username, content);
     await quora.query(
       `INSERT INTO posts(username, content) VALUES ('${username}', '${content}')`,
     );

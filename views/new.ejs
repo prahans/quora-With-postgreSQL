@@ -1,23 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create New Post</title>
-  </head>
+<%- include("includes/head.ejs");  %>
   <body>
     <h1>Create New Post</h1>
-    <form method="post" action="/posts">
-      <input placeholder="enter username" name="username" type="text" />
-      <br /><br />
-      <textarea
-        name="content"
-        placeholder="enter your content"
-        rows="10"
-        cols="40"
-      ></textarea
-      ><br />
-      <button>Submit Post</button>
+    <form method="post" action="/posts" class="mb-3">
+      <label for="user" class="form-label">username</label>
+      <input type="text" class="form-control" id="user" placeholder="enter username" name="username">
+      <label for="content" class="form-label">content</label>
+      <textarea class="form-control" id="content" rows="3" name="content"></textarea> <br>
+      <button class="btn btn-outline-success">Submit Post</button>
     </form>
   </body>
 </html>
