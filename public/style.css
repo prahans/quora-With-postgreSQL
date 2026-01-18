@@ -27,4 +27,12 @@ a {
 mark {
   background: yellow;
 }
-
+.search {
+  width: 70%;
+  border: 2px solid rgba(0, 0, 0, 0.408);
+  display: inline-block;
+}
+.header {
+  display: flex;
+  align-items: center;
+}

@@ -1,10 +1,13 @@
 <%- include("includes/head.ejs");  %>
     <h1>Quora</h1>
-    <form method="get" action="/posts">
-      <input type="text" placeholder="search" name="q">
-      <button>search</button>
+    <div class="header">
+      <form method="get" action="/posts">
+      <input class="form-control search" type="text" placeholder="search" name="q">
+      <button class="btn btn-outline-success btn-sm">search</button>
     </form>
-    <a href="/posts/new">Create a new post</a>
+    <a href="/posts/new" class="newPost">Create a new post</a>
+    </div>
+    <hr>
     <% for(post of posts){ %>
       <div class="post">
         <h5 class="username">@<%- post.username %></h5>
