@@ -16,10 +16,33 @@ app.get("/", (req, res) => {
   res.send("hi i am root");
 });
 
+
+function highlight(text, q) {
+  if (!q) return text;
+  return text.split(q).join(`<mark>${q}</mark>`);
+}
 app.get("/posts", async (req, res) => {
   try {
-    const result = await quora.query("SELECT * FROM posts");
-    res.render("index.ejs", { posts: result.rows });
+    let q = req.query.q;
+
+    if (!q) {
+      const result = await quora.query("SELECT * FROM posts");
+      res.render("index.ejs", { posts: result.rows });
+    } else {
+      const result = await quora.query(
+        `SELECT * FROM posts 
+         WHERE username ILIKE '%${q}%' 
+            OR content ILIKE '%${q}%'`
+      );
+
+      const posts = result.rows.map(post => ({
+        ...post,
+        username: highlight(post.username, q),
+        content: highlight(post.content, q)
+      }));
+
+      res.render("index.ejs", { posts });
+    }
   } catch (err) {
     console.error(err);
     res.send("Database error");
