@@ -24,10 +24,11 @@ function highlight(text, q) {
 app.get("/posts", async (req, res) => {
   try {
     let q = req.query.q;
-
+    const postCount = await quora.query("SELECT COUNT(*) FROM posts");
+    const totalPost = postCount.rows[0].count;
     if (!q) {
       const result = await quora.query("SELECT * FROM posts");
-      res.render("index.ejs", { posts: result.rows });
+      res.render("index.ejs", { posts: result.rows, totalPost});
     } else {
       const result = await quora.query(
         `SELECT * FROM posts 
@@ -40,8 +41,14 @@ app.get("/posts", async (req, res) => {
         username: highlight(post.username, q),
         content: highlight(post.content, q)
       }));
+      let totalPost = await quora.query(
+        `SELECT COUNT(*) FROM posts 
+         WHERE username ILIKE '%${q}%' 
+            OR content ILIKE '%${q}%'`
+      );
+      totalPost = totalPost.rows[0].count;
 
-      res.render("index.ejs", { posts });
+      res.render("index.ejs", { posts, totalPost });
     }
   } catch (err) {
     console.error(err);

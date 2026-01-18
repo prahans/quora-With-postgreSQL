@@ -6,6 +6,9 @@
       <button class="btn btn-outline-success btn-sm">search</button>
     </form>
     <a href="/posts/new" class="newPost">Create a new post</a>
+    <button class="btn"><%= totalPost %> posts</button>
+    <button class="btn">sort ASC</button>
+    <button class="btn">sort DESC</button>
     </div>
     <hr>
     <% for(post of posts){ %>
@@ -17,6 +20,7 @@
         <form method="post" action="/posts/<%= post.post_id %>?_method=DELETE" class="deleteform">
                 <button class="btn btn-outline-danger btn-sm">Delete Post</button>
         </form>
+        <span><span>
       </div>
     <% } %>
     <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
