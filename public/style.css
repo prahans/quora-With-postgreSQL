@@ -36,3 +36,6 @@ mark {
   display: flex;
   align-items: center;
 }
+.timeAgo {
+  margin-left: 60%;
+}

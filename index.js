@@ -16,7 +16,6 @@ app.get("/", (req, res) => {
   res.send("hi i am root");
 });
 
-
 function highlight(text, q) {
   if (!q) return text;
   return text.split(q).join(`<mark>${q}</mark>`);
@@ -27,24 +26,67 @@ app.get("/posts", async (req, res) => {
     const postCount = await quora.query("SELECT COUNT(*) FROM posts");
     const totalPost = postCount.rows[0].count;
     if (!q) {
-      const result = await quora.query("SELECT * FROM posts");
-      res.render("index.ejs", { posts: result.rows, totalPost});
+      const result = await quora.query(`SELECT *,
+  CASE
+    WHEN NOW() - created_at < INTERVAL '1 minute'
+      THEN 'just now'
+
+    WHEN NOW() - created_at < INTERVAL '1 hour'
+      THEN FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 60) || ' min ago'
+
+    WHEN NOW() - created_at < INTERVAL '1 day'
+      THEN FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 3600) || ' hr ago'
+
+    WHEN NOW() - created_at < INTERVAL '1 month'
+      THEN FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 86400) || ' days ago'
+
+    WHEN NOW() - created_at < INTERVAL '1 year'
+      THEN FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 2592000) || ' months ago'
+
+    ELSE
+      FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 31536000) || ' years ago'
+  END AS time_ago
+FROM posts
+ORDER BY created_at DESC;
+`);
+
+      res.render("index.ejs", { posts: result.rows, totalPost });
     } else {
       const result = await quora.query(
-        `SELECT * FROM posts 
+        `SELECT *,
+        CASE
+    WHEN NOW() - created_at < INTERVAL '1 minute'
+      THEN 'just now'
+
+    WHEN NOW() - created_at < INTERVAL '1 hour'
+      THEN FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 60) || ' min ago'
+
+    WHEN NOW() - created_at < INTERVAL '1 day'
+      THEN FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 3600) || ' hr ago'
+
+    WHEN NOW() - created_at < INTERVAL '1 month'
+      THEN FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 86400) || ' days ago'
+
+    WHEN NOW() - created_at < INTERVAL '1 year'
+      THEN FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 2592000) || ' months ago'
+
+    ELSE
+      FLOOR(EXTRACT(EPOCH FROM (NOW() - created_at)) / 31536000) || ' years ago'
+  END AS time_ago
+         FROM posts 
          WHERE username ILIKE '%${q}%' 
-            OR content ILIKE '%${q}%'`
+            OR content ILIKE '%${q}%'`,
       );
 
-      const posts = result.rows.map(post => ({
+      const posts = result.rows.map((post) => ({
         ...post,
         username: highlight(post.username, q),
-        content: highlight(post.content, q)
+        content: highlight(post.content, q),
       }));
       let totalPost = await quora.query(
         `SELECT COUNT(*) FROM posts 
          WHERE username ILIKE '%${q}%' 
-            OR content ILIKE '%${q}%'`
+            OR content ILIKE '%${q}%'`,
       );
       totalPost = totalPost.rows[0].count;
 
